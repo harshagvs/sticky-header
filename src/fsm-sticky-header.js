@@ -7,18 +7,12 @@
         return {
             restrict: 'EA',
             replace: false,
-            scope: { 
-                scrollBody: '=',
-                scrollStop: '=',
-                scrollableContainer: '=',
-                contentOffset: '='
-            },
             link: function(scope, element, attributes, control){
                 var header = $(element, this);
                 var clonedHeader = null;
-                var content = $(scope.scrollBody);
-                var scrollableContainer = $(scope.scrollableContainer);
-                var contentOffset = scope.contentOffset || 0;
+                var content = $(attributes.scrollBody);
+                var scrollableContainer = $(attributes.scrollableContainer);
+                var contentOffset = attributes.contentOffset || 0;
     
                 if (scrollableContainer.length === 0){
                     scrollableContainer = $(window);
@@ -35,8 +29,8 @@
                 };
 
                 function determineVisibility(){
-                    var scrollTop = scrollableContainer.scrollTop() + scope.scrollStop;
-                    var contentTop = content.offset().top + contentOffset;
+                    var scrollTop = scrollableContainer.scrollTop() + Number(attributes.scrollStop);
+                    var contentTop = content.offset().top + Number(contentOffset);
                     var contentBottom = contentTop + content.outerHeight(false);
 
                     if ( (scrollTop > contentTop) && (scrollTop < contentBottom) ) {
@@ -46,7 +40,7 @@
                         }
                         
                         if ( scrollTop < contentBottom && scrollTop > contentBottom - clonedHeader.outerHeight(false) ){
-                            var top = contentBottom - scrollTop + scope.scrollStop - clonedHeader.outerHeight(false);
+                            var top = contentBottom - scrollTop + attributes.scrollStop - clonedHeader.outerHeight(false);
                             clonedHeader.css('top', top + 'px');
                         } else {
                             calculateSize();
@@ -75,7 +69,7 @@
         
                 function calculateSize() {
                     clonedHeader.css({
-                        top: scope.scrollStop,
+                        top:  Number(attributes.scrollStop),
                         width: header.outerWidth(),
                         left: header.offset().left
                     });
